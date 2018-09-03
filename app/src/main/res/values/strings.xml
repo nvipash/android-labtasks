@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">nvipash_app</string>
     <string name="action_settings">Settings</string>
+    <string name="input_your_name">Input your name</string>
+    <string name="hello">Say Hello!</string>
+    <string name="empty_name_message">I don\'t know you :(</string>
+    <string name="default_text">What is your name?</string>
 </resources>
