@@ -9,6 +9,7 @@
     <string name="input_password_conf">Password Confirmation</string>
     <string name="submit_button">Submit</string>
     <string name="card_label">User account</string>
+    <string name="view_list_button">View list</string>
     <string name="short_first_name_error">- First name must have at least 3 characters</string>
     <string name="upper_case_first_name_error">- First name must be started with upper case</string>
     <string name="short_last_name_error">- Last name must have at least 4 characters</string>

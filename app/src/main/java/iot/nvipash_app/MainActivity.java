@@ -1,5 +1,8 @@
 package iot.nvipash_app;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -7,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -22,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
     private EditText inputPhone;
     private EditText inputPassword;
     private EditText inputPasswordReEnter;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,20 +43,35 @@ public class MainActivity extends AppCompatActivity {
         inputPassword = findViewById(R.id.input_password);
         inputPasswordReEnter = findViewById(R.id.input_password_conf);
         errorText = findViewById(R.id.error_text);
+        Button viewListButton = findViewById(R.id.view_list_button);
         FloatingActionButton submitFab = findViewById(R.id.fab);
         setSupportActionBar(toolbar);
 
         submitFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                submitValidation();
-                cleanUserData(view);
+                userValidation();
+                saveAndCleanUserData(view);
+            }
+        });
+        viewListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, UserActivity.class);
+                startActivity(intent);
             }
         });
     }
 
-    private void cleanUserData(View view) {
+    private void saveAndCleanUserData(View view) {
         if (errorsList.isEmpty()) {
+            SharedPreferences sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("first_name", firstName);
+            editor.putString("last_name", lastName);
+            editor.putString("phone", phone);
+            editor.putString("email", email);
+            editor.apply();
             inputFirstName.setText("");
             inputLastName.setText("");
             inputPhone.setText("");
@@ -58,10 +81,6 @@ public class MainActivity extends AppCompatActivity {
             Snackbar.make(view, R.string.snackbar_valid_info, Snackbar.LENGTH_SHORT)
                     .setAction("Action", null).show();
         }
-    }
-
-    private void submitValidation() {
-        userValidation();
     }
 
     private boolean userValidation() {
@@ -75,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void firstNameValidation() {
-        String firstName = inputFirstName.getText().toString();
+        firstName = inputFirstName.getText().toString();
         if (firstName.isEmpty() || firstName.length() < 3) {
             errorsList.add(getString(R.string.short_first_name_error));
             VALIDATION = false;
@@ -83,12 +102,13 @@ public class MainActivity extends AppCompatActivity {
             errorsList.add(getString(R.string.upper_case_first_name_error));
             VALIDATION = false;
         } else {
-            inputFirstName.setError(null);
+            errorsList.remove(getString(R.string.short_first_name_error));
+            errorsList.remove(getString(R.string.upper_case_first_name_error));
         }
     }
 
     private void lastNameValidation() {
-        String lastName = inputLastName.getText().toString();
+        lastName = inputLastName.getText().toString();
         if (lastName.isEmpty() || lastName.length() < 4) {
             errorsList.add(getString(R.string.short_last_name_error));
             VALIDATION = false;
@@ -96,27 +116,28 @@ public class MainActivity extends AppCompatActivity {
             errorsList.add(getString(R.string.upper_case_last_name_error));
             VALIDATION = false;
         } else {
-            inputLastName.setError(null);
+            errorsList.remove(getString(R.string.short_first_name_error));
+            errorsList.remove(getString(R.string.upper_case_first_name_error));
         }
     }
 
     private void emailValidation() {
-        String email = inputEmail.getText().toString();
+        email = inputEmail.getText().toString();
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             errorsList.add(getString(R.string.invalid_email_error));
             VALIDATION = false;
         } else {
-            inputEmail.setError(null);
+            errorsList.remove(getString(R.string.invalid_email_error));
         }
     }
 
     private void phoneValidation() {
-        String phone = inputPhone.getText().toString();
+        phone = inputPhone.getText().toString();
         if (phone.isEmpty() || !Patterns.PHONE.matcher(phone).matches()) {
             errorsList.add(getString(R.string.invalid_phone_error));
             VALIDATION = false;
         } else {
-            inputEmail.setError(null);
+            errorsList.remove(getString(R.string.invalid_phone_error));
         }
     }
 
@@ -127,14 +148,14 @@ public class MainActivity extends AppCompatActivity {
             errorsList.add(getString(R.string.short_password_error));
             VALIDATION = false;
         } else {
-            inputPassword.setError(null);
+            errorsList.remove(getString(R.string.short_password_error));
         }
 
         if (passwordReEnter.isEmpty() || !passwordReEnter.equals(password)) {
             errorsList.add(getString(R.string.not_equals_password_error));
             VALIDATION = false;
         } else {
-            inputPasswordReEnter.setError(null);
+            errorsList.remove(getString(R.string.not_equals_password_error));
         }
     }
 }
