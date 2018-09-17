@@ -9,4 +9,14 @@
     <string name="input_password_conf">Password Confirmation</string>
     <string name="submit_button">Submit</string>
     <string name="card_label">User account</string>
+    <string name="short_first_name_error">- First name must have at least 3 characters</string>
+    <string name="upper_case_first_name_error">- First name must be started with upper case</string>
+    <string name="short_last_name_error">- Last name must have at least 4 characters</string>
+    <string name="upper_case_last_name_error">- Last name must be started with upper case</string>
+    <string name="invalid_email_error">- Email address is invalid</string>
+    <string name="invalid_phone_error">- Phone number is invalid</string>
+    <string name="short_password_error">- Password must be between 4 and 10 alphanumeric characters</string>
+    <string name="not_equals_password_error">- Re-entered password not equals password</string>
+    <string name="snackbar_valid_info">Validation was successful.
+        View your data on click \'View List\'</string>
 </resources>

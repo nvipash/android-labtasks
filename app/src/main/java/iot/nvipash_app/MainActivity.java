@@ -6,8 +6,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Patterns;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,14 +13,15 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    static boolean VALIDATION = true;
+    private ArrayList<String> errorsList = new ArrayList<>(7);
+    private TextView errorText;
     private EditText inputFirstName;
     private EditText inputLastName;
     private EditText inputEmail;
     private EditText inputPhone;
     private EditText inputPassword;
     private EditText inputPasswordReEnter;
-    private ArrayList<String> errorsList;
-    private TextView errorText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,95 +42,99 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 submitValidation();
-                if (errorsList.isEmpty()) {
-                    inputFirstName.setText("");
-                    inputLastName.setText("");
-                    inputPhone.setText("");
-                    inputEmail.setText("");
-                    inputPassword.setText("");
-                    inputPasswordReEnter.setText("");
-                    Snackbar.make(view, "Validation was successfully completed", Snackbar.LENGTH_SHORT)
-                            .setAction("Action", null).show();
-                }
+                cleanUserData(view);
             }
         });
     }
 
-    public void submitValidation() {
+    private void cleanUserData(View view) {
+        if (errorsList.isEmpty()) {
+            inputFirstName.setText("");
+            inputLastName.setText("");
+            inputPhone.setText("");
+            inputEmail.setText("");
+            inputPassword.setText("");
+            inputPasswordReEnter.setText("");
+            Snackbar.make(view, R.string.snackbar_valid_info, Snackbar.LENGTH_SHORT)
+                    .setAction("Action", null).show();
+        }
+    }
+
+    private void submitValidation() {
         userValidation();
     }
 
     private boolean userValidation() {
-        boolean validation = true;
-        errorsList = new ArrayList<>();
-        String firstName = inputFirstName.getText().toString();
-        String lastName = inputLastName.getText().toString();
-        String email = inputEmail.getText().toString();
-        String phone = inputPhone.getText().toString();
-        String password = inputPassword.getText().toString();
-        String passwordReEnter = inputPasswordReEnter.getText().toString();
+        firstNameValidation();
+        lastNameValidation();
+        emailValidation();
+        phoneValidation();
+        passwordValidation();
+        errorText.setText(errorsList.toString());
+        return VALIDATION;
+    }
 
+    private void firstNameValidation() {
+        String firstName = inputFirstName.getText().toString();
         if (firstName.isEmpty() || firstName.length() < 3) {
-            errorsList.add("- First name must have at least 3 characters \n");
-            validation = false;
+            errorsList.add(getString(R.string.short_first_name_error));
+            VALIDATION = false;
         } else if (Character.isLowerCase(firstName.charAt(0))) {
-            errorsList.add("- First name must be started with upper case \n");
-            validation = false;
+            errorsList.add(getString(R.string.upper_case_first_name_error));
+            VALIDATION = false;
         } else {
             inputFirstName.setError(null);
         }
+    }
 
+    private void lastNameValidation() {
+        String lastName = inputLastName.getText().toString();
         if (lastName.isEmpty() || lastName.length() < 4) {
-            errorsList.add("- Last name must have at least 4 characters \n");
-            validation = false;
+            errorsList.add(getString(R.string.short_last_name_error));
+            VALIDATION = false;
         } else if (Character.isLowerCase(lastName.charAt(0))) {
-            errorsList.add("- Last name must be started with upper case \n");
-            validation = false;
+            errorsList.add(getString(R.string.upper_case_last_name_error));
+            VALIDATION = false;
         } else {
             inputLastName.setError(null);
         }
+    }
 
+    private void emailValidation() {
+        String email = inputEmail.getText().toString();
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            errorsList.add("- Email address is invalid \n");
-            validation = false;
+            errorsList.add(getString(R.string.invalid_email_error));
+            VALIDATION = false;
         } else {
             inputEmail.setError(null);
         }
+    }
 
+    private void phoneValidation() {
+        String phone = inputPhone.getText().toString();
         if (phone.isEmpty() || !Patterns.PHONE.matcher(phone).matches()) {
-            errorsList.add("- Phone number is invalid \n");
-            validation = false;
+            errorsList.add(getString(R.string.invalid_phone_error));
+            VALIDATION = false;
         } else {
             inputEmail.setError(null);
         }
+    }
 
+    private void passwordValidation() {
+        String password = inputPassword.getText().toString();
+        String passwordReEnter = inputPasswordReEnter.getText().toString();
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            errorsList.add("- Password must be between 4 and 10 alphanumeric characters \n");
-            validation = false;
+            errorsList.add(getString(R.string.short_password_error));
+            VALIDATION = false;
         } else {
             inputPassword.setError(null);
         }
 
         if (passwordReEnter.isEmpty() || !passwordReEnter.equals(password)) {
-            errorsList.add("- Re-entered password not equals password \n");
-            validation = false;
+            errorsList.add(getString(R.string.not_equals_password_error));
+            VALIDATION = false;
         } else {
             inputPasswordReEnter.setError(null);
         }
-
-        errorText.setText(errorsList.toString());
-        return validation;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 }
