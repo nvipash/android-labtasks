@@ -65,12 +65,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveAndCleanUserData(View view) {
         if (errorsList.isEmpty()) {
-            SharedPreferences sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE);
+            SharedPreferences sharedPref = getSharedPreferences(Constants.USER_DATA_KEY,
+                    Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("first_name", firstName);
-            editor.putString("last_name", lastName);
-            editor.putString("phone", phone);
-            editor.putString("email", email);
+            editor.putString(Constants.FIRST_NAME_KEY, firstName);
+            editor.putString(Constants.LAST_NAME_KEY, lastName);
+            editor.putString(Constants.PHONE_KEY, phone);
+            editor.putString(Constants.EMAIL_KEY, email);
             editor.apply();
             inputFirstName.setText("");
             inputLastName.setText("");

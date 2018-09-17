@@ -12,18 +12,25 @@ import java.util.Arrays;
 import java.util.List;
 
 public class UserActivity extends AppCompatActivity {
+    private ListView usersList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
-        ListView usersList = findViewById(R.id.users_list);
-        SharedPreferences sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE);
-        String savedFirstName = sharedPref.getString("first_name", "");
-        String savedLastName = sharedPref.getString("last_name", "");
-        String savedEmail = sharedPref.getString("email", "");
-        String savedPhone = sharedPref.getString("phone", "");
-        String[] savedUserData = new String[]{savedFirstName, savedLastName, savedEmail, savedPhone};
+        usersList = findViewById(R.id.users_list);
+        setUserData();
+    }
+
+    private void setUserData() {
+        SharedPreferences sharedPref = getSharedPreferences(Constants.USER_DATA_KEY,
+                Context.MODE_PRIVATE);
+        String savedFirstName = sharedPref.getString(Constants.FIRST_NAME_KEY, "");
+        String savedLastName = sharedPref.getString(Constants.LAST_NAME_KEY, "");
+        String savedEmail = sharedPref.getString(Constants.EMAIL_KEY, "");
+        String savedPhone = sharedPref.getString(Constants.PHONE_KEY, "");
+        String[] savedUserData = new String[]{savedFirstName, savedLastName,
+                savedEmail, savedPhone};
         List<String> listSavedUsers = new ArrayList<>(Arrays.asList(savedUserData));
         ArrayAdapter<String> adapterList = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, listSavedUsers);
