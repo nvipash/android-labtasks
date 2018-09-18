@@ -10,11 +10,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
-    static boolean VALIDATION = true;
-    private ArrayList<String> errorsList = new ArrayList<>(7);
+    private Set<String> errorsSet = new HashSet<>();
     private TextView errorText;
     private EditText inputFirstName;
     private EditText inputLastName;
@@ -41,14 +41,14 @@ public class MainActivity extends AppCompatActivity {
         submitFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                submitValidation();
+                userValidation();
                 cleanUserData(view);
             }
         });
     }
 
     private void cleanUserData(View view) {
-        if (errorsList.isEmpty()) {
+        if (errorsSet.isEmpty()) {
             inputFirstName.setText("");
             inputLastName.setText("");
             inputPhone.setText("");
@@ -60,63 +60,54 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void submitValidation() {
-        userValidation();
-    }
-
-    private boolean userValidation() {
+    private void userValidation() {
         firstNameValidation();
         lastNameValidation();
         emailValidation();
         phoneValidation();
         passwordValidation();
-        errorText.setText(errorsList.toString());
-        return VALIDATION;
+        errorText.setText(errorsSet.toString());
     }
 
     private void firstNameValidation() {
         String firstName = inputFirstName.getText().toString();
         if (firstName.isEmpty() || firstName.length() < 3) {
-            errorsList.add(getString(R.string.short_first_name_error));
-            VALIDATION = false;
+            errorsSet.add(getString(R.string.short_first_name_error));
         } else if (Character.isLowerCase(firstName.charAt(0))) {
-            errorsList.add(getString(R.string.upper_case_first_name_error));
-            VALIDATION = false;
+            errorsSet.add(getString(R.string.upper_case_first_name_error));
         } else {
-            inputFirstName.setError(null);
+            errorsSet.remove(getString(R.string.short_first_name_error));
+            errorsSet.remove(getString(R.string.upper_case_first_name_error));
         }
     }
 
     private void lastNameValidation() {
         String lastName = inputLastName.getText().toString();
         if (lastName.isEmpty() || lastName.length() < 4) {
-            errorsList.add(getString(R.string.short_last_name_error));
-            VALIDATION = false;
+            errorsSet.add(getString(R.string.short_last_name_error));
         } else if (Character.isLowerCase(lastName.charAt(0))) {
-            errorsList.add(getString(R.string.upper_case_last_name_error));
-            VALIDATION = false;
+            errorsSet.add(getString(R.string.upper_case_last_name_error));
         } else {
-            inputLastName.setError(null);
+            errorsSet.remove(getString(R.string.short_last_name_error));
+            errorsSet.remove(getString(R.string.upper_case_last_name_error));
         }
     }
 
     private void emailValidation() {
         String email = inputEmail.getText().toString();
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            errorsList.add(getString(R.string.invalid_email_error));
-            VALIDATION = false;
+            errorsSet.add(getString(R.string.invalid_email_error));
         } else {
-            inputEmail.setError(null);
+            errorsSet.remove(getString(R.string.invalid_email_error));
         }
     }
 
     private void phoneValidation() {
         String phone = inputPhone.getText().toString();
         if (phone.isEmpty() || !Patterns.PHONE.matcher(phone).matches()) {
-            errorsList.add(getString(R.string.invalid_phone_error));
-            VALIDATION = false;
+            errorsSet.add(getString(R.string.invalid_phone_error));
         } else {
-            inputEmail.setError(null);
+            errorsSet.remove(getString(R.string.invalid_phone_error));
         }
     }
 
@@ -124,17 +115,15 @@ public class MainActivity extends AppCompatActivity {
         String password = inputPassword.getText().toString();
         String passwordReEnter = inputPasswordReEnter.getText().toString();
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            errorsList.add(getString(R.string.short_password_error));
-            VALIDATION = false;
+            errorsSet.add(getString(R.string.short_password_error));
         } else {
-            inputPassword.setError(null);
+            errorsSet.remove(getString(R.string.short_password_error));
         }
 
         if (passwordReEnter.isEmpty() || !passwordReEnter.equals(password)) {
-            errorsList.add(getString(R.string.not_equals_password_error));
-            VALIDATION = false;
+            errorsSet.add(getString(R.string.not_equals_password_error));
         } else {
-            inputPasswordReEnter.setError(null);
+            errorsSet.remove(getString(R.string.not_equals_password_error));
         }
     }
 }
