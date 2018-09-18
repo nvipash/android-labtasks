@@ -1,74 +1,129 @@
 package iot.nvipash_app;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Patterns;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class MainActivity extends AppCompatActivity {
+    private Set<String> errorsSet = new HashSet<>();
+    private TextView errorText;
+    private EditText inputFirstName;
+    private EditText inputLastName;
+    private EditText inputEmail;
+    private EditText inputPhone;
+    private EditText inputPassword;
+    private EditText inputPasswordReEnter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final EditText inputName = findViewById(R.id.input_name);
-        final Button clearButton = findViewById(R.id.clear_button);
-        final Button sayHelloButton = findViewById(R.id.hello_button);
-        final TextView sayHelloText = findViewById(R.id.hello_my_name);
-        final Toolbar toolbar = findViewById(R.id.toolbar);
-        final FloatingActionButton fab = findViewById(R.id.fab);
-        sayHelloText.setText(R.string.default_text);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        inputFirstName = findViewById(R.id.input_first_name);
+        inputLastName = findViewById(R.id.input_last_name);
+        inputEmail = findViewById(R.id.input_email);
+        inputPhone = findViewById(R.id.input_mobile);
+        inputPassword = findViewById(R.id.input_password);
+        inputPasswordReEnter = findViewById(R.id.input_password_conf);
+        errorText = findViewById(R.id.error_text);
+        FloatingActionButton submitFab = findViewById(R.id.fab);
         setSupportActionBar(toolbar);
 
-
-        clearButton.setOnClickListener(new View.OnClickListener() {
+        submitFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputName.setText("");
-                sayHelloText.setText(R.string.default_text);
-            }
-        });
-
-        sayHelloButton.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onClick(View view) {
-                if (inputName.getText().toString().equals("")) {
-                    Snackbar.make(view, R.string.empty_name_message, Snackbar.LENGTH_SHORT)
-                            .setAction("Action", null).show();
-                } else {
-                    sayHelloText.setText("Hello " + inputName.getText() + "!");
-                }
-            }
-        });
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "App by Pavlo Novitskiy", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                userValidation();
+                cleanUserData(view);
             }
         });
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    private void cleanUserData(View view) {
+        if (errorsSet.isEmpty()) {
+            inputFirstName.setText("");
+            inputLastName.setText("");
+            inputPhone.setText("");
+            inputEmail.setText("");
+            inputPassword.setText("");
+            inputPasswordReEnter.setText("");
+            Snackbar.make(view, R.string.snackbar_valid_info, Snackbar.LENGTH_SHORT)
+                    .setAction("Action", null).show();
+        }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        return id == R.id.action_settings || super.onOptionsItemSelected(item);
+    private void userValidation() {
+        firstNameValidation();
+        lastNameValidation();
+        emailValidation();
+        phoneValidation();
+        passwordValidation();
+        errorText.setText(errorsSet.toString());
+    }
+
+    private void firstNameValidation() {
+        String firstName = inputFirstName.getText().toString();
+        if (firstName.isEmpty() || firstName.length() < 3) {
+            errorsSet.add(getString(R.string.short_first_name_error));
+        } else if (Character.isLowerCase(firstName.charAt(0))) {
+            errorsSet.add(getString(R.string.upper_case_first_name_error));
+        } else {
+            errorsSet.remove(getString(R.string.short_first_name_error));
+            errorsSet.remove(getString(R.string.upper_case_first_name_error));
+        }
+    }
+
+    private void lastNameValidation() {
+        String lastName = inputLastName.getText().toString();
+        if (lastName.isEmpty() || lastName.length() < 4) {
+            errorsSet.add(getString(R.string.short_last_name_error));
+        } else if (Character.isLowerCase(lastName.charAt(0))) {
+            errorsSet.add(getString(R.string.upper_case_last_name_error));
+        } else {
+            errorsSet.remove(getString(R.string.short_last_name_error));
+            errorsSet.remove(getString(R.string.upper_case_last_name_error));
+        }
+    }
+
+    private void emailValidation() {
+        String email = inputEmail.getText().toString();
+        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            errorsSet.add(getString(R.string.invalid_email_error));
+        } else {
+            errorsSet.remove(getString(R.string.invalid_email_error));
+        }
+    }
+
+    private void phoneValidation() {
+        String phone = inputPhone.getText().toString();
+        if (phone.isEmpty() || !Patterns.PHONE.matcher(phone).matches()) {
+            errorsSet.add(getString(R.string.invalid_phone_error));
+        } else {
+            errorsSet.remove(getString(R.string.invalid_phone_error));
+        }
+    }
+
+    private void passwordValidation() {
+        String password = inputPassword.getText().toString();
+        String passwordReEnter = inputPasswordReEnter.getText().toString();
+        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+            errorsSet.add(getString(R.string.short_password_error));
+        } else {
+            errorsSet.remove(getString(R.string.short_password_error));
+        }
+
+        if (passwordReEnter.isEmpty() || !passwordReEnter.equals(password)) {
+            errorsSet.add(getString(R.string.not_equals_password_error));
+        } else {
+            errorsSet.remove(getString(R.string.not_equals_password_error));
+        }
     }
 }
