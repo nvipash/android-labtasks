@@ -1,7 +1,6 @@
 package iot.nvipash_harvardapi.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +27,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        makeApiCall();
+    }
+
+    private void makeApiCall() {
         GetRecordsData data = RetrofitInstance
                 .getRetrofitInstance().create(GetRecordsData.class);
 
@@ -38,8 +45,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<RecordsList> call,
                                    Response<RecordsList> response) {
-                assert response.body() != null;
-                generateRecordsList(response.body().getRecordsArrayList());
+                if (response.body() != null) {
+                    generateRecordsList(response.body().getRecordsArrayList());
+                }
             }
 
             @Override

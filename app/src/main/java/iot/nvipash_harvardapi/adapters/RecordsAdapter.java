@@ -39,10 +39,11 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsAdapter.RecordsV
         return recordsList.size();
     }
 
-    class RecordsViewHolder extends RecyclerView.ViewHolder {
-        TextView recordTitle, recordTechnique;
+    protected class RecordsViewHolder extends RecyclerView.ViewHolder {
+        private TextView recordTitle;
+        private TextView recordTechnique;
 
-        RecordsViewHolder(View itemView) {
+        private RecordsViewHolder(View itemView) {
             super(itemView);
             recordTitle = itemView.findViewById(R.id.api_record_title);
             recordTechnique = itemView.findViewById(R.id.api_record_technique);
