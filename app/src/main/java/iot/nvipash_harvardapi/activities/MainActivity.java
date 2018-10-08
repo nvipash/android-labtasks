@@ -1,14 +1,22 @@
 package iot.nvipash_harvardapi.activities;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.widget.Toast;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import iot.nvipash_harvardapi.R;
 import iot.nvipash_harvardapi.http_client.GetRecordsData;
 import iot.nvipash_harvardapi.entities.Records;
@@ -20,19 +28,43 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(android.R.id.content)
+    View currentAppView;
+    @BindView(R.id.no_data_image)
+    ImageView noDataImage;
+    @BindView(R.id.no_data_text_info)
+    TextView noDataTextInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        noDataImage.setVisibility(View.INVISIBLE);
+        noDataTextInfo.setVisibility(View.INVISIBLE);
+
+        swipeToRefreshContent();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         makeApiCall();
+    }
+
+    private void swipeToRefreshContent() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                makeApiCall();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     private void makeApiCall() {
@@ -47,13 +79,17 @@ public class MainActivity extends AppCompatActivity {
                                    Response<RecordsList> response) {
                 if (response.body() != null) {
                     generateRecordsList(response.body().getRecordsArrayList());
+                    noDataTextInfo.setVisibility(View.INVISIBLE);
+                    noDataImage.setVisibility(View.INVISIBLE);
                 }
             }
 
             @Override
             public void onFailure(Call<RecordsList> call, Throwable throwable) {
-                Toast.makeText(MainActivity.this, R.string.on_failure_error,
-                        Toast.LENGTH_LONG).show();
+                noDataImage.setVisibility(View.VISIBLE);
+                noDataTextInfo.setVisibility(View.VISIBLE);
+                Snackbar.make(currentAppView, R.string.on_failure_error,
+                        Snackbar.LENGTH_LONG).show();
             }
         });
     }

@@ -7,13 +7,20 @@ public class Records {
     private Integer id;
     @SerializedName("title")
     private String title;
-    @SerializedName("technique")
-    private String technique;
+    @SerializedName("creditline")
+    private String creditLine;
+    @SerializedName("dimensions")
+    private String dimensions;
+    @SerializedName("primaryimageurl")
+    private String primaryImageUrl;
 
-    public Records(Integer id, String title, String technique) {
+    public Records(Integer id, String title, String creditLine,
+                   String dimensions, String primaryImageUrl) {
         this.id = id;
         this.title = title;
-        this.technique = technique;
+        this.creditLine = creditLine;
+        this.dimensions = dimensions;
+        this.primaryImageUrl = primaryImageUrl;
     }
 
     public Integer getId() {
@@ -32,11 +39,27 @@ public class Records {
         this.title = title;
     }
 
-    public String getTechnique() {
-        return technique;
+    public String getCreditLine() {
+        return creditLine;
     }
 
-    public void setTechnique(String technique) {
-        this.technique = technique;
+    public void setCreditLine(String creditLine) {
+        this.creditLine = creditLine;
+    }
+
+    public String getDimensions() {
+        return dimensions;
+    }
+
+    public void setDimensions(String dimensions) {
+        this.dimensions = dimensions;
+    }
+
+    public String getPrimaryImageUrl() {
+        return primaryImageUrl;
+    }
+
+    public void setPrimaryImageUrl(String primaryImageUrl) {
+        this.primaryImageUrl = primaryImageUrl;
     }
 }
