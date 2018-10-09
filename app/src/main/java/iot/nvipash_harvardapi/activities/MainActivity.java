@@ -28,15 +28,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-    @BindView(R.id.toolbar)
+    protected @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.swipe_refresh_layout)
+    protected @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(android.R.id.content)
+    protected @BindView(android.R.id.content)
     View currentAppView;
-    @BindView(R.id.no_data_image)
+    protected @BindView(R.id.no_data_image)
     ImageView noDataImage;
-    @BindView(R.id.no_data_text_info)
+    protected @BindView(R.id.no_data_text_info)
     TextView noDataTextInfo;
 
     @Override

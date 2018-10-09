@@ -14,7 +14,7 @@ import iot.nvipash_harvardapi.entities.Records;
 import iot.nvipash_harvardapi.R;
 import iot.nvipash_harvardapi.views.RecordsViewHolder;
 
-public class RecordsAdapter extends RecyclerView.Adapter {
+public class RecordsAdapter extends RecyclerView.Adapter<RecordsViewHolder> {
 
     private ArrayList<Records> recordsList;
 
@@ -24,22 +24,22 @@ public class RecordsAdapter extends RecyclerView.Adapter {
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parentView, int viewType) {
+    public RecordsViewHolder onCreateViewHolder(@NonNull ViewGroup parentView, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parentView.getContext());
         View view = layoutInflater.inflate(R.layout.single_record_view, parentView, false);
         return new RecordsViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-        ((RecordsViewHolder) viewHolder).recordsTitle.setText(recordsList.get(position).getTitle());
-        ((RecordsViewHolder) viewHolder).recordsCreditLine
+    public void onBindViewHolder(@NonNull RecordsViewHolder viewHolder, int position) {
+        viewHolder.recordsTitle.setText(recordsList.get(position).getTitle());
+        viewHolder.recordsCreditLine
                 .setText(recordsList.get(position).getCreditLine());
-        ((RecordsViewHolder) viewHolder).recordsDimensions
+        viewHolder.recordsDimensions
                 .setText(recordsList.get(position).getDimensions());
         Picasso.with(viewHolder.itemView.getContext())
                 .load(recordsList.get(position).getPrimaryImageUrl())
-                .fit().centerCrop().into(((RecordsViewHolder) viewHolder).recordsPrimaryImage);
+                .fit().centerCrop().into(viewHolder.recordsPrimaryImage);
     }
 
     @Override
