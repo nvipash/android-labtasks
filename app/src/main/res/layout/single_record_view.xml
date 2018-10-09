@@ -7,27 +7,47 @@
     card_view:cardElevation="3dp"
     card_view:cardUseCompatPadding="true">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:orientation="vertical"
-        android:padding="5dp">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/api_record_title"
+        <ImageView
+            android:id="@+id/api_records_primary_image"
+            android:layout_width="125dp"
+            android:layout_height="150dp"
+            android:contentDescription="@string/image_description" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:textStyle="bold" />
+            android:layout_alignParentTop="@id/api_records_primary_image"
+            android:layout_toEndOf="@+id/api_records_primary_image"
+            android:orientation="vertical"
+            android:padding="5dp">
 
-        <TextView
-            android:id="@+id/api_record_technique"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="3dp" />
+            <TextView
+                android:id="@+id/api_records_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/api_records_credit_line"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="3dp" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/api_records_dimensions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="3dp" />
+
+        </LinearLayout>
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>

@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Harvard Art Museums</string>
-    <string name="on_failure_error">Turn on Internet connection</string>
+    <string name="on_failure_error">Internet connection is not available</string>
+    <string name="image_description">primary image</string>
+    <string name="image_no_data_description">no data available</string>
+    <string name="no_data_text_info">Check your Internet connection</string>
 </resources>
