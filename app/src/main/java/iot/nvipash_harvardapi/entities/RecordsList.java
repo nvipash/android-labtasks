@@ -6,13 +6,13 @@ import java.util.ArrayList;
 
 public class RecordsList {
     @SerializedName("records")
-    private ArrayList<Records> records;
+    private ArrayList<Record> records;
 
-    public ArrayList<Records> getRecordsArrayList() {
+    public ArrayList<Record> getRecordsArrayList() {
         return records;
     }
 
-    public void setRecordsArrayList(ArrayList<Records> recordsArrayList) {
-        this.records = recordsArrayList;
+    public void setRecordsArrayList(ArrayList<Record> recordArrayList) {
+        this.records = recordArrayList;
     }
 }

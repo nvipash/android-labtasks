@@ -4,4 +4,11 @@
     <string name="image_description">primary image</string>
     <string name="image_no_data_description">no data available</string>
     <string name="no_data_text_info">Check your Internet connection</string>
+    <string name="details_button">details</string>
+    <string name="favourites_title">Favourites</string>
+    <string name="provenance_titile">Provenance</string>
+    <string name="credits_title">Credits</string>
+    <string name="technique_title">Technique</string>
+    <string name="dimensions_title">Dimensions</string>
+    <string name="department_title">Department</string>
 </resources>
