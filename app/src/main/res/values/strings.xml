@@ -11,4 +11,5 @@
     <string name="technique_title">Technique</string>
     <string name="dimensions_title">Dimensions</string>
     <string name="department_title">Department</string>
+    <string name="image_error">Image is not provided by Harvard API</string>
 </resources>

@@ -20,6 +20,7 @@ import iot.nvipash_harvardapi.fragments.RecordDetailsFragment;
 import iot.nvipash_harvardapi.views.RecordsViewHolder;
 
 public class RecordsAdapter extends RecyclerView.Adapter<RecordsViewHolder> {
+    public static final String RECORD_ID = "RECORD_ID";
 
     public interface OnItemClickListener {
         void onItemClick(Record item);
@@ -68,12 +69,13 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsViewHolder> {
     private void openDetailsFragment(int position, View view) {
         RecordDetailsFragment detailsFragment = new RecordDetailsFragment();
         Bundle bundleId = new Bundle();
-        bundleId.putInt("RECORDS_ID", recordList.get(position).getId());
+        bundleId.putInt(RECORD_ID, recordList.get(position).getId());
         detailsFragment.setArguments(bundleId);
         listener.onItemClick(recordList.get(position));
+        /*
+        * NOTE: can't connect with getActivity() because RecyclerView.Adapter != Fragment
+        */
         ((MainActivity) Objects.requireNonNull(view.getContext()))
-                .getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, detailsFragment, null)
-                .addToBackStack(null).commit();
+                .setFragment(detailsFragment);
     }
 }

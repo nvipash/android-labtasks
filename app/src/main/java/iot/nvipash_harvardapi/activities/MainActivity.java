@@ -1,17 +1,12 @@
 package iot.nvipash_harvardapi.activities;
 
-import android.app.ActionBar;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
-import java.util.Objects;
-
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import iot.nvipash_harvardapi.R;
 import iot.nvipash_harvardapi.fragments.FavouriteRecordsFragment;
@@ -25,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        fragmentOnStart();
+        setFragment(new RecordsListFragment());
     }
 
     @Override
@@ -50,11 +45,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void fragmentOnStart() {
-        RecordsListFragment recordsListFragment = new RecordsListFragment();
-        getSupportActionBar();
+    public void setFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, recordsListFragment)
+                .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null).commit();
     }
 }
