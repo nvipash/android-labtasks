@@ -73,8 +73,8 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsViewHolder> {
         detailsFragment.setArguments(bundleId);
         listener.onItemClick(recordList.get(position));
         /*
-        * NOTE: can't connect with getActivity() because RecyclerView.Adapter != Fragment
-        */
+         * NOTE: can't connect with getActivity() because RecyclerView.Adapter != Fragment
+         */
         ((MainActivity) Objects.requireNonNull(view.getContext()))
                 .setFragment(detailsFragment);
     }

@@ -1,18 +1,30 @@
 package iot.nvipash_harvardapi.activities;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
+import java.util.ArrayList;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import iot.nvipash_harvardapi.R;
-import iot.nvipash_harvardapi.fragments.FavouriteRecordsFragment;
+import iot.nvipash_harvardapi.adapters.RecordsAdapter;
+import iot.nvipash_harvardapi.entities.Record;
+import iot.nvipash_harvardapi.fragments.RecordsFavouritesFragment;
 import iot.nvipash_harvardapi.fragments.RecordsListFragment;
 
 public class MainActivity extends AppCompatActivity {
+
+    @BindView(android.R.id.content)
+    protected View parentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,29 +37,53 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.favourites_toolbar_button, menu);
-        return true;
+        Fragment currentFragment = getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_container);
+        if (currentFragment instanceof RecordsFavouritesFragment) {
+            return false;
+        } else {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.favourites_toolbar_button, menu);
+            return true;
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favourite:
-                FavouriteRecordsFragment favouriteRecordsFragment
-                        = new FavouriteRecordsFragment();
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, favouriteRecordsFragment)
-                        .addToBackStack(null).commit();
+                setFragment(new RecordsFavouritesFragment());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    public void setFragment(Fragment fragment) {
+    public void setFragment(final Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null).commit();
+    }
+
+    public void showSnackBar(int textFromResources) {
+        Snackbar.make(parentView, getString(textFromResources),
+                Snackbar.LENGTH_LONG).show();
+    }
+
+    public void generateRecordsList(ArrayList<Record> recordList,
+                                    RecyclerView recordsListView) {
+        RecordsAdapter adapter = new RecordsAdapter(recordList, item -> { });
+        RecyclerView.LayoutManager layoutManager =
+                new LinearLayoutManager(getBaseContext());
+        recordsListView.setLayoutManager(layoutManager);
+        recordsListView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            finish();
+        }
     }
 }

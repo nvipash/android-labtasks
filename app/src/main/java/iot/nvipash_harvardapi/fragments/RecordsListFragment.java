@@ -2,10 +2,8 @@ package iot.nvipash_harvardapi.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -14,15 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import iot.nvipash_harvardapi.R;
 import iot.nvipash_harvardapi.activities.MainActivity;
-import iot.nvipash_harvardapi.adapters.RecordsAdapter;
-import iot.nvipash_harvardapi.entities.Record;
 import iot.nvipash_harvardapi.entities.RecordsList;
 import iot.nvipash_harvardapi.http_client.GetRecordsData;
 import iot.nvipash_harvardapi.http_client.RetrofitInstance;
@@ -82,7 +77,8 @@ public class RecordsListFragment extends Fragment {
             public void onResponse(Call<RecordsList> call,
                                    Response<RecordsList> response) {
                 if (response.body() != null) {
-                    generateRecordsList(response.body().getRecordsArrayList());
+                    ((MainActivity) Objects.requireNonNull(getActivity())).generateRecordsList
+                            (response.body().getRecordsArrayList(), recordsListView);
                     noDataTextInfo.setVisibility(View.INVISIBLE);
                     noDataImage.setVisibility(View.INVISIBLE);
                 }
@@ -92,17 +88,10 @@ public class RecordsListFragment extends Fragment {
             public void onFailure(Call<RecordsList> call, Throwable throwable) {
                 noDataImage.setVisibility(View.VISIBLE);
                 noDataTextInfo.setVisibility(View.VISIBLE);
-                Snackbar.make(recordsListView, R.string.on_failure_error,
-                        Snackbar.LENGTH_LONG).show();
+
+                ((MainActivity) Objects.requireNonNull(getActivity()))
+                        .showSnackBar(R.string.on_failure_error);
             }
         });
-    }
-
-    private void generateRecordsList(ArrayList<Record> recordList) {
-        RecordsAdapter adapter = new RecordsAdapter(recordList, item -> { });
-        RecyclerView.LayoutManager layoutManager =
-                new LinearLayoutManager(getContext());
-        recordsListView.setLayoutManager(layoutManager);
-        recordsListView.setAdapter(adapter);
     }
 }

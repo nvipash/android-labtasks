@@ -1,9 +1,11 @@
 package iot.nvipash_harvardapi.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
@@ -30,7 +33,10 @@ import retrofit2.Response;
 
 public class RecordDetailsFragment extends Fragment {
     public static final String IMAGE_URL = "PRIMARY_IMAGE_URL";
+    public static final String FAVOURITE_RECORD = "FAVOURITE_RECORD";
+    private SharedPreferences favouritesPreferences;
     private RecordImageFragment imageFragment;
+    private Record recordResponse;
 
     @BindView(R.id.collapsing_toolbar)
     protected CollapsingToolbarLayout collapsingToolbarLayout;
@@ -53,10 +59,13 @@ public class RecordDetailsFragment extends Fragment {
     @BindView(R.id.api_records_department)
     protected TextView recordsDepartment;
 
+    @BindView(R.id.fab_add_favourites)
+    protected FloatingActionButton addToFavouritesButton;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_record_details, container, false);
         ButterKnife.bind(this, view);
 
         return view;
@@ -66,12 +75,54 @@ public class RecordDetailsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         makeApiCall();
+
+        favouritesPreferences = Objects.requireNonNull(getActivity())
+                .getSharedPreferences(FAVOURITE_RECORD, Context.MODE_PRIVATE);
     }
 
     @OnClick(R.id.image)
     public void onImageClickListener(View view) {
-        ((MainActivity) Objects.requireNonNull(view.getContext()))
+        ((MainActivity) Objects.requireNonNull(getActivity()))
                 .setFragment(imageFragment);
+    }
+
+    @OnClick(R.id.fab_add_favourites)
+    public void onAddToFavouritesButtonListener(View view) {
+        setFavouritesPreferences();
+    }
+
+    private void setTextToTextViews(Record recordResponse) {
+        collapsingToolbarLayout.setTitle(recordResponse.getTitle());
+        recordsProvenance.setText(recordResponse.getProvenance());
+        recordsCredits.setText(recordResponse.getCreditLine());
+        recordsTechnique.setText(recordResponse.getTechnique());
+        recordsDimensions.setText(recordResponse.getDimensions());
+        recordsDepartment.setText(recordResponse.getDepartment());
+    }
+
+    private void setImageAndSetUrlToFragment(Record recordResponse) {
+        String primaryImageUrl = recordResponse.getPrimaryImageUrl();
+        Bundle bundleImageUrl = new Bundle();
+        imageFragment = new RecordImageFragment();
+
+        Picasso.with(getContext()).load(primaryImageUrl)
+                .centerCrop().fit().into(primaryImage);
+
+        bundleImageUrl.putString(IMAGE_URL, primaryImageUrl);
+        imageFragment.setArguments(bundleImageUrl);
+    }
+
+    private void setFavouritesPreferences() {
+        if (favouritesPreferences.contains(recordResponse.getTitle())) {
+            favouritesPreferences.edit().remove(recordResponse.getTitle()).apply();
+            ((MainActivity) Objects.requireNonNull(getActivity()))
+                    .showSnackBar(R.string.record_deleted_info);
+        } else {
+            favouritesPreferences.edit().putString(recordResponse.getTitle(),
+                    new Gson().toJson(recordResponse)).apply();
+            ((MainActivity) Objects.requireNonNull(getActivity()))
+                    .showSnackBar(R.string.record_added_info);
+        }
     }
 
     private void makeApiCall() {
@@ -84,33 +135,18 @@ public class RecordDetailsFragment extends Fragment {
             @Override
             public void onResponse(Call<Record> call,
                                    Response<Record> response) {
-                Record recordResponse = response.body();
+                recordResponse = response.body();
 
                 if (recordResponse != null) {
-                    String primaryImageUrl = recordResponse.getPrimaryImageUrl();
-                    Bundle bundleImageUrl = new Bundle();
-
-                    collapsingToolbarLayout.setTitle(recordResponse.getTitle());
-                    recordsProvenance.setText(recordResponse.getProvenance());
-                    recordsCredits.setText(recordResponse.getCreditLine());
-                    recordsTechnique.setText(recordResponse.getTechnique());
-                    recordsDimensions.setText(recordResponse.getDimensions());
-                    recordsDepartment.setText(recordResponse.getDepartment());
-                    Picasso.with(getContext()).load(primaryImageUrl)
-                            .centerCrop().fit().into(primaryImage);
-
-                    bundleImageUrl.putString(IMAGE_URL, primaryImageUrl);
-                    imageFragment = new RecordImageFragment();
-                    imageFragment.setArguments(bundleImageUrl);
-
+                    setTextToTextViews(recordResponse);
+                    setImageAndSetUrlToFragment(recordResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<Record> call, Throwable throwable) {
-                Snackbar.make(Objects.requireNonNull(getActivity())
-                                .findViewById(android.R.id.content), R.string.on_failure_error,
-                        Snackbar.LENGTH_LONG).show();
+                ((MainActivity) Objects.requireNonNull(getActivity()))
+                        .showSnackBar(R.string.on_failure_error);
             }
         });
     }
