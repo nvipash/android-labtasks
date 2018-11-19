@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void generateRecordsList(ArrayList<Record> recordList,
                                     RecyclerView recordsListView) {
-        RecordsAdapter adapter = new RecordsAdapter(recordList, item -> { });
+        RecordsAdapter adapter = new RecordsAdapter(recordList);
         RecyclerView.LayoutManager layoutManager =
                 new LinearLayoutManager(getBaseContext());
         recordsListView.setLayoutManager(layoutManager);

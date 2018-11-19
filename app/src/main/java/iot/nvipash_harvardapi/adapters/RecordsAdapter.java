@@ -26,13 +26,10 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsViewHolder> {
         void onItemClick(Record item);
     }
 
-    private final OnItemClickListener listener;
     private ArrayList<Record> recordList;
 
-    public RecordsAdapter(ArrayList<Record> recordList,
-                          OnItemClickListener listener) {
+    public RecordsAdapter(ArrayList<Record> recordList) {
         this.recordList = recordList;
-        this.listener = listener;
     }
 
     @NonNull
@@ -71,7 +68,7 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsViewHolder> {
         Bundle bundleId = new Bundle();
         bundleId.putInt(RECORD_ID, recordList.get(position).getId());
         detailsFragment.setArguments(bundleId);
-        listener.onItemClick(recordList.get(position));
+        OnItemClickListener listener = item -> openDetailsFragment(position, view);
         /*
          * NOTE: can't connect with getActivity() because RecyclerView.Adapter != Fragment
          */
