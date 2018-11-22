@@ -1,4 +1,4 @@
-package iot.nvipash_harvardapi.views;
+package iot.nvipash_harvardapi;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

@@ -19,11 +19,12 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import iot.nvipash_harvardapi.MainActivity;
 import iot.nvipash_harvardapi.R;
-import iot.nvipash_harvardapi.activities.MainActivity;
 import iot.nvipash_harvardapi.entities.Record;
+import iot.nvipash_harvardapi.views.RecordsFavouritesView;
 
-public class RecordsFavouritesFragment extends Fragment {
+public class RecordsFavouritesFragment extends Fragment implements RecordsFavouritesView {
     private ArrayList<Record> recordList;
 
     @BindView(R.id.recycler_view_records_list)
@@ -53,7 +54,8 @@ public class RecordsFavouritesFragment extends Fragment {
                 .generateRecordsList(recordList, recordsListView);
     }
 
-    private void setFavouritesFromPreferences() {
+    @Override
+    public void setFavouritesFromPreferences() {
         SharedPreferences favouritesPreferences = Objects.requireNonNull(getActivity())
                 .getSharedPreferences(RecordDetailsFragment.FAVOURITE_RECORD, Context.MODE_PRIVATE);
         Map<String, ?> favouritesPreferencesAll = favouritesPreferences.getAll();

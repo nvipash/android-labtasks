@@ -16,16 +16,18 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import iot.nvipash_harvardapi.MainActivity;
 import iot.nvipash_harvardapi.R;
-import iot.nvipash_harvardapi.activities.MainActivity;
 import iot.nvipash_harvardapi.entities.RecordsList;
 import iot.nvipash_harvardapi.http_client.GetRecordsData;
 import iot.nvipash_harvardapi.http_client.RetrofitInstance;
+import iot.nvipash_harvardapi.views.RecordsListView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RecordsListFragment extends Fragment {
+public class RecordsListFragment extends Fragment implements RecordsListView {
+
     @BindView(R.id.recycler_view_records_list)
     protected RecyclerView recordsListView;
 
@@ -58,7 +60,8 @@ public class RecordsListFragment extends Fragment {
         makeApiCall();
     }
 
-    private void swipeToRefreshContent() {
+    @Override
+    public void swipeToRefreshContent() {
         swipeRefreshLayout.setOnRefreshListener(() -> {
                     makeApiCall();
                     swipeRefreshLayout.setRefreshing(false);
@@ -66,7 +69,8 @@ public class RecordsListFragment extends Fragment {
         );
     }
 
-    private void makeApiCall() {
+    @Override
+    public void makeApiCall() {
         GetRecordsData data = RetrofitInstance
                 .getRetrofitInstance().create(GetRecordsData.class);
 

@@ -1,4 +1,4 @@
-package iot.nvipash_harvardapi.activities;
+package iot.nvipash_harvardapi;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -20,8 +20,9 @@ import iot.nvipash_harvardapi.adapters.RecordsAdapter;
 import iot.nvipash_harvardapi.entities.Record;
 import iot.nvipash_harvardapi.fragments.RecordsFavouritesFragment;
 import iot.nvipash_harvardapi.fragments.RecordsListFragment;
+import iot.nvipash_harvardapi.views.MainView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainView {
 
     @BindView(android.R.id.content)
     protected View parentView;
@@ -59,17 +60,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
     public void setFragment(final Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null).commit();
     }
 
+
+    @Override
     public void showSnackBar(int textFromResources) {
         Snackbar.make(parentView, getString(textFromResources),
                 Snackbar.LENGTH_LONG).show();
     }
 
+    @Override
     public void generateRecordsList(ArrayList<Record> recordList,
                                     RecyclerView recordsListView) {
         RecordsAdapter adapter = new RecordsAdapter(recordList);

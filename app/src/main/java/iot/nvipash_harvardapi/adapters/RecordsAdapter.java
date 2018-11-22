@@ -13,19 +13,14 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import iot.nvipash_harvardapi.MainActivity;
 import iot.nvipash_harvardapi.R;
-import iot.nvipash_harvardapi.activities.MainActivity;
 import iot.nvipash_harvardapi.entities.Record;
 import iot.nvipash_harvardapi.fragments.RecordDetailsFragment;
-import iot.nvipash_harvardapi.views.RecordsViewHolder;
+import iot.nvipash_harvardapi.RecordsViewHolder;
 
 public class RecordsAdapter extends RecyclerView.Adapter<RecordsViewHolder> {
     public static final String RECORD_ID = "RECORD_ID";
-
-    public interface OnItemClickListener {
-        void onItemClick(Record item);
-    }
-
     private ArrayList<Record> recordList;
 
     public RecordsAdapter(ArrayList<Record> recordList) {
@@ -68,7 +63,7 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecordsViewHolder> {
         Bundle bundleId = new Bundle();
         bundleId.putInt(RECORD_ID, recordList.get(position).getId());
         detailsFragment.setArguments(bundleId);
-        OnItemClickListener listener = item -> openDetailsFragment(position, view);
+        OnRecordClickListener listener = item -> openDetailsFragment(position, view);
         /*
          * NOTE: can't connect with getActivity() because RecyclerView.Adapter != Fragment
          */

@@ -20,8 +20,9 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import iot.nvipash_harvardapi.R;
+import iot.nvipash_harvardapi.views.RecordImageView;
 
-public class RecordImageFragment extends Fragment {
+public class RecordImageFragment extends Fragment implements RecordImageView {
     private String imageUrl;
 
     @BindView(R.id.api_record_image_fullscreen)
@@ -46,7 +47,8 @@ public class RecordImageFragment extends Fragment {
         showBigImageView();
     }
 
-    private void showBigImageView() {
+    @Override
+    public void showBigImageView() {
         if (getArguments() != null) {
             imageUrl = getArguments().getString(RecordDetailsFragment.IMAGE_URL);
         }

@@ -21,17 +21,18 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import iot.nvipash_harvardapi.MainActivity;
 import iot.nvipash_harvardapi.R;
-import iot.nvipash_harvardapi.activities.MainActivity;
 import iot.nvipash_harvardapi.adapters.RecordsAdapter;
 import iot.nvipash_harvardapi.entities.Record;
 import iot.nvipash_harvardapi.http_client.GetRecordsData;
 import iot.nvipash_harvardapi.http_client.RetrofitInstance;
+import iot.nvipash_harvardapi.views.RecordDetailsView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RecordDetailsFragment extends Fragment {
+public class RecordDetailsFragment extends Fragment implements RecordDetailsView {
     public static final String IMAGE_URL = "PRIMARY_IMAGE_URL";
     public static final String FAVOURITE_RECORD = "FAVOURITE_RECORD";
     private SharedPreferences favouritesPreferences;
@@ -91,7 +92,8 @@ public class RecordDetailsFragment extends Fragment {
         setFavouritesPreferences();
     }
 
-    private void setTextToTextViews(Record recordResponse) {
+    @Override
+    public void setTextToTextViews(Record recordResponse) {
         collapsingToolbarLayout.setTitle(recordResponse.getTitle());
         recordsProvenance.setText(recordResponse.getProvenance());
         recordsCredits.setText(recordResponse.getCreditLine());
@@ -100,7 +102,8 @@ public class RecordDetailsFragment extends Fragment {
         recordsDepartment.setText(recordResponse.getDepartment());
     }
 
-    private void setImageAndSetUrlToFragment(Record recordResponse) {
+    @Override
+    public void setImageAndSetUrlToFragment(Record recordResponse) {
         String primaryImageUrl = recordResponse.getPrimaryImageUrl();
         Bundle bundleImageUrl = new Bundle();
         imageFragment = new RecordImageFragment();
@@ -112,7 +115,8 @@ public class RecordDetailsFragment extends Fragment {
         imageFragment.setArguments(bundleImageUrl);
     }
 
-    private void setFavouritesPreferences() {
+    @Override
+    public void setFavouritesPreferences() {
         if (favouritesPreferences.contains(recordResponse.getTitle())) {
             favouritesPreferences.edit().remove(recordResponse.getTitle()).apply();
             ((MainActivity) Objects.requireNonNull(getActivity()))
@@ -125,7 +129,8 @@ public class RecordDetailsFragment extends Fragment {
         }
     }
 
-    private void makeApiCall() {
+    @Override
+    public void makeApiCall() {
         GetRecordsData data = RetrofitInstance
                 .getRetrofitInstance().create(GetRecordsData.class);
         int recordId = Objects.requireNonNull(getArguments()).getInt(RecordsAdapter.RECORD_ID);
