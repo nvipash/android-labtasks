@@ -46,4 +46,11 @@ jobs:
             echo "Branch: ${CIRCLE_BRANCH} , PR: ${CIRCLE_PULL_REQUEST}"
             ./gradlew assembleDebug
       - store_artifacts:
-                path: app/build/outputs/apk
+          path: app/build/outputs/apk
+      - deploy:
+          name: Build relase application
+          command: |
+             echo "Branch: ${CIRCLE_BRANCH} , PR: ${CIRCLE_PULL_REQUEST}"
+             ./gradlew assembleRelease
+      - store_artifacts:
+           path: app/build/outputs/apk
