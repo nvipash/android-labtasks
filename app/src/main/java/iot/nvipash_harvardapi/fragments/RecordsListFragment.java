@@ -20,7 +20,6 @@ import iot.nvipash_harvardapi.MainActivity;
 import iot.nvipash_harvardapi.R;
 import iot.nvipash_harvardapi.entities.RecordsList;
 import iot.nvipash_harvardapi.http_client.GetRecordsData;
-import iot.nvipash_harvardapi.http_client.RetrofitInstance;
 import iot.nvipash_harvardapi.views.RecordsListView;
 import retrofit2.Call;
 import retrofit2.Callback;

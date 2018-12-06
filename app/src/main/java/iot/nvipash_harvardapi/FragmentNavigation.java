@@ -1,13 +1,21 @@
 package iot.nvipash_harvardapi;
 
-import iot.nvipash_harvardapi.fragments.BaseFragment;
+import android.support.v4.app.Fragment;
 
-public interface FragmentNavigation {
+public class FragmentNavigation {
 
-    interface View {
-        void attachPresenter(Presenter presenter);
+    private final MainActivity activity;
+
+    private Fragment currentFragment;
+
+    public FragmentNavigation(final MainActivity activity) {
+        this.activity = activity;
     }
-    interface Presenter {
-        void addFragment(BaseFragment fragment);
+
+    public void setFragment(final Fragment fragment) {
+        activity.getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null).commit();
     }
+
 }

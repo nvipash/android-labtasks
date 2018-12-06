@@ -26,7 +26,6 @@ import iot.nvipash_harvardapi.R;
 import iot.nvipash_harvardapi.adapters.RecordsAdapter;
 import iot.nvipash_harvardapi.entities.Record;
 import iot.nvipash_harvardapi.http_client.GetRecordsData;
-import iot.nvipash_harvardapi.http_client.RetrofitInstance;
 import iot.nvipash_harvardapi.views.RecordDetailsView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -83,8 +82,8 @@ public class RecordDetailsFragment extends Fragment implements RecordDetailsView
 
     @OnClick(R.id.image)
     public void onImageClickListener(View view) {
-        ((MainActivity) Objects.requireNonNull(getActivity()))
-                .setFragment(imageFragment);
+//        ((MainActivity) Objects.requireNonNull(getActivity()))
+//                .setFragment(imageFragment);
     }
 
     @OnClick(R.id.fab_add_favourites)
@@ -131,28 +130,29 @@ public class RecordDetailsFragment extends Fragment implements RecordDetailsView
 
     @Override
     public void makeApiCall() {
-        GetRecordsData data = RetrofitInstance
-                .getRetrofitInstance().create(GetRecordsData.class);
-        int recordId = Objects.requireNonNull(getArguments()).getInt(RecordsAdapter.RECORD_ID);
-        Call<Record> call = data.getRecordWithId(recordId);
-
-        call.enqueue(new Callback<Record>() {
-            @Override
-            public void onResponse(Call<Record> call,
-                                   Response<Record> response) {
-                recordResponse = response.body();
-
-                if (recordResponse != null) {
-                    setTextToTextViews(recordResponse);
-                    setImageAndSetUrlToFragment(recordResponse);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Record> call, Throwable throwable) {
-                ((MainActivity) Objects.requireNonNull(getActivity()))
-                        .showSnackBar(R.string.on_failure_error);
-            }
-        });
+//        GetRecordsData data = RetrofitInstance
+//                .getRetrofitInstance().create(GetRecordsData.class);
+//        int recordId = Objects.requireNonNull(getArguments()).getInt(RecordsAdapter.RECORD_ID);
+//        Call<Record> call = data.getRecordWithId(recordId);
+//
+//        call.enqueue(new Callback<Record>() {
+//            @Override
+//            public void onResponse(Call<Record> call,
+//                                   Response<Record> response) {
+//                recordResponse = response.body();
+//
+//                if (recordResponse != null) {
+//                    setTextToTextViews(recordResponse);
+//                    setImageAndSetUrlToFragment(recordResponse);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Record> call, Throwable throwable) {
+//                ((MainActivity) Objects.requireNonNull(getActivity()))
+//                        .showSnackBar(R.string.on_failure_error);
+//            }
+//        });
+//    }
     }
 }

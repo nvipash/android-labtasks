@@ -15,14 +15,13 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import iot.nvipash_harvardapi.R;
 import iot.nvipash_harvardapi.adapters.RecordsAdapter;
 import iot.nvipash_harvardapi.entities.Record;
 import iot.nvipash_harvardapi.fragments.RecordsFavouritesFragment;
 import iot.nvipash_harvardapi.fragments.RecordsListFragment;
-import iot.nvipash_harvardapi.views.MainView;
 
-public class MainActivity extends AppCompatActivity implements MainView {
+public class MainActivity extends AppCompatActivity {
+    private ApplicationEx applicationEx;
 
     @BindView(android.R.id.content)
     protected View parentView;
@@ -32,8 +31,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        setFragment(new RecordsListFragment());
+        applicationEx = (ApplicationEx) getApplicationContext();
+        FragmentNavigation fragmentNavigation = new FragmentNavigation(this);
+        applicationEx.setFragmentNavigation(fragmentNavigation);
+        applicationEx.getFragmentNavigation().setFragment(new RecordsListFragment());
     }
 
     @Override
@@ -53,36 +54,28 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favourite:
-                setFragment(new RecordsFavouritesFragment());
+                applicationEx.getFragmentNavigation().setFragment((new RecordsFavouritesFragment()));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    @Override
-    public void setFragment(final Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null).commit();
-    }
-
-
-    @Override
-    public void showSnackBar(int textFromResources) {
-        Snackbar.make(parentView, getString(textFromResources),
-                Snackbar.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void generateRecordsList(ArrayList<Record> recordList,
-                                    RecyclerView recordsListView) {
-        RecordsAdapter adapter = new RecordsAdapter(recordList);
-        RecyclerView.LayoutManager layoutManager =
-                new LinearLayoutManager(getBaseContext());
-        recordsListView.setLayoutManager(layoutManager);
-        recordsListView.setAdapter(adapter);
-    }
+//    @Override
+//    public void showSnackBar(int textFromResources) {
+//        Snackbar.make(parentView, getString(textFromResources),
+//                Snackbar.LENGTH_LONG).show();
+//    }
+//
+//    @Override
+//    public void generateRecordsList(ArrayList<Record> recordList,
+//                                    RecyclerView recordsListView) {
+//        RecordsAdapter adapter = new RecordsAdapter(recordList);
+//        RecyclerView.LayoutManager layoutManager =
+//                new LinearLayoutManager(getBaseContext());
+//        recordsListView.setLayoutManager(layoutManager);
+//        recordsListView.setAdapter(adapter);
+//    }
 
     @Override
     public void onBackPressed() {
